@@ -13,8 +13,7 @@
   [link (-> path-string? path-string?
             void)]))
 
-(define language?
-  (symbols 'asm 'day0))
+(define language? symbol?)
 
 (define nasm-pth (find-executable-path "nasm"))
 (define ld-pth (find-executable-path "ld"))

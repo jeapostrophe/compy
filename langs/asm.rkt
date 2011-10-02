@@ -5,16 +5,26 @@
 (provide
  (contract-out
   [eax register?]
+  [ebx register?]
   [asm? (-> any/c boolean?)]
-  [asm-begin (->* () () #:rest (listof asm?)
+  [seqn (->* () () #:rest (listof asm?)
                   asm?)]
-  [mov (-> register? constant?
+  [push (-> register?
+           asm?)]
+  [pop (-> register?
+           asm?)]
+  [mov (-> register? (or/c constant? register?)
+           asm?)]
+  [add (-> register? register?
+           asm?)]
+  [sub (-> register? register?
            asm?)]
   [write (-> asm? void)]))
 
 ;; Registers
 (struct register (name) #:prefab)
 (define eax (register 'eax))
+(define ebx (register 'ebx))
 
 (define register->string
   (match-lambda
@@ -32,18 +42,43 @@
 (struct asm () #:prefab)
 (struct block asm (l) #:prefab)
 (struct mov asm (dest src) #:prefab)
+(struct push asm (src) #:prefab)
+(struct pop asm (dest) #:prefab)
+(struct add asm (dest src) #:prefab)
+(struct sub asm (dest src) #:prefab)
 
-(define (asm-begin . l)
+(define arg->string
+  (match-lambda
+   [(? register? r)
+    (register->string r)]
+   [c
+    (constant->string c)]))
+
+(define (seqn . l)
   (block l))
 
 (define write-one
   (match-lambda
    [(block l)
     (for-each write-one l)]
+   [(push src)
+    (printf "push ~a\n"
+            (register->string src))]
+   [(pop dest)
+    (printf "pop ~a\n"
+            (register->string dest))]
+   [(add dest src)
+    (printf "add ~a, ~a\n"
+            (register->string dest)
+            (register->string src))]
+   [(sub dest src)
+    (printf "sub ~a, ~a\n"
+            (register->string dest)
+            (register->string src))]
    [(mov dest src)
     (printf "mov ~a, ~a\n"
             (register->string dest)
-            (constant->string src))]))
+            (arg->string src))]))
 
 (define (write a)
   (printf "section .text\n")

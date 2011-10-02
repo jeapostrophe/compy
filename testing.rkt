@@ -42,13 +42,13 @@
         (write program)))
     (check-not-exn
      (lambda ()
-       (compile 'day0 p-pth
+       (compile language p-pth
                 'asm a-pth))
      "Compiling")
     (link a-pth b-pth)
     (define-values (actual-stdout actual-stderr actual-exit-code)
       (run b-pth))
-    (check-equal? expected-exit-code actual-exit-code "Exit Code")
+    (check-equal? actual-exit-code expected-exit-code "Exit Code")
     (check-not-false (regexp-match expected-stdout-rx actual-stdout) "Standard Output")
     (check-not-false (regexp-match expected-stderr-rx actual-stderr) "Standard Error")
     (void)
