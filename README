@@ -1,0 +1,24 @@
+This is a little nano-pass compiler to experiment with teaching a compiler course in that style.
+
+The 'langs' directory has the compilers for the various languages.
+
+The 'asm' language is X86 assembly. I expect it to grow and grow as
+the course goes on.
+
+The 'day0' language just has single byte numbers.
+
+The 'day1' language adds the basic operations of the CPU (arithmetic, logic, etc.)
+
+I haven't done any more yet, but I expect to add...
+
+* if0
+* explicit continuations in code
+* CPS'd function calls with top-level functions
+* add a CPS pass
+* add a vector function (must learn OS malloc interaction)
+* add list functions using vector as base
+* implement closures
+* implement type safety (dynamically and statically)
+* implement call/cc
+* implement function inlining
+* ... ?

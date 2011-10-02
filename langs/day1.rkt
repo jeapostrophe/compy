@@ -8,6 +8,8 @@
 
 (struct binop e (op lhs rhs) #:prefab)
 
+;; XXX Add all the arithmetic ops
+;; XXX Add a few unary ops (add1, sub1, negate, not)
 (define parse
   (match-lambda
    [`(+ ,lhs ,rhs)
