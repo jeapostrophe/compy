@@ -27,3 +27,64 @@
 (test-program
  'day1 '(- 4 2)
  #rx#"^$" #rx#"^$" 2)
+
+(test-program
+ 'day1 '(add1 1)
+ #rx#"^$" #rx#"^$" 2)
+(test-program
+ 'day1 '(sub1 1)
+ #rx#"^$" #rx#"^$" 0)
+
+(test-program
+ 'day1 '(sub1 (+ 2 2))
+ #rx#"^$" #rx#"^$" 3)
+(test-program
+ 'day1 '(add1 (+ 2 2))
+ #rx#"^$" #rx#"^$" 5)
+
+(test-program
+ 'day1 '(bitwise-not #b00000000)
+ #rx#"^$" #rx#"^$" #b11111111)
+(test-program
+ 'day1 '(bitwise-not #b11111111)
+ #rx#"^$" #rx#"^$" #b00000000)
+
+(test-program
+ 'day1 '(bitwise-and 0 0)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day1 '(bitwise-and 1 0)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day1 '(bitwise-and 0 1)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day1 '(bitwise-and 1 1)
+ #rx#"^$" #rx#"^$" 1)
+
+(test-program
+ 'day1 '(bitwise-ior 0 0)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day1 '(bitwise-ior 1 0)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day1 '(bitwise-ior 0 1)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day1 '(bitwise-ior 1 1)
+ #rx#"^$" #rx#"^$" 1)
+
+(test-program
+ 'day1 '(bitwise-xor 0 0)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day1 '(bitwise-xor 1 0)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day1 '(bitwise-xor 0 1)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day1 '(bitwise-xor 1 1)
+ #rx#"^$" #rx#"^$" 0)
+
