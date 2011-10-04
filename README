@@ -22,3 +22,11 @@ I haven't done any more yet, but I expect to add...
 * implement call/cc
 * implement function inlining
 * ... ?
+
+Grading ideas
+* Turn in tests, organized by language and feature
+* Manual review of if features are really tested by the test
+* Compare their test behavior versus mine (to see if it is a valid test)
+* Score is (passing/how many tests I had)
+* You get 2 points for a test that crashes someone else's code
+* You get nothing if any don't pass (of anyone's tests)

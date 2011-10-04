@@ -88,3 +88,34 @@
  'day1 '(bitwise-xor 1 1)
  #rx#"^$" #rx#"^$" 0)
 
+(test-program
+ 'day2 '(* 1 1)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day2 '(* 1 3)
+ #rx#"^$" #rx#"^$" 3)
+(test-program
+ 'day2 '(* 4 3)
+ #rx#"^$" #rx#"^$" 12)
+
+(test-program
+ 'day2 '(+ 4 3)
+ #rx#"^$" #rx#"^$" 7)
+(test-program
+ 'day2 '(- 4 3)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day2 '(quotient 4 3)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day2 '(remainder 4 3)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day2 '(quotient 8 3)
+ #rx#"^$" #rx#"^$" 2)
+(test-program
+ 'day2 '(remainder 8 10)
+ #rx#"^$" #rx#"^$" 8)
+(test-program
+ 'day2 '(quotient 4 2)
+ #rx#"^$" #rx#"^$" 2)

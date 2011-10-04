@@ -6,6 +6,8 @@
  (contract-out
   [eax register?]
   [ebx register?]
+  [ecx register?]
+  [edx register?]
   [asm? (-> any/c boolean?)]
   [seqn (->* () () #:rest (listof asm?)
                   asm?)]
@@ -15,11 +17,15 @@
            asm?)]
   [mov (-> register? (or/c constant? register?)
            asm?)]
+  [cltd (-> asm?)]
+  [xchg binop/c]
   [add binop/c]
   [sub binop/c]
   [rename _and and binop/c]
   [rename _or or binop/c]
   [rename _xor xor binop/c]
+  [imul unaop/c]
+  [idiv unaop/c]
   [inc unaop/c]
   [dec unaop/c]
   [rename _not not unaop/c]
@@ -29,6 +35,8 @@
 (struct register (name) #:prefab)
 (define eax (register 'eax))
 (define ebx (register 'ebx))
+(define ecx (register 'ecx))
+(define edx (register 'edx))
 
 (define register->string
   (match-lambda
@@ -48,14 +56,18 @@
 (struct mov asm (dest src) #:prefab)
 (struct push asm (src) #:prefab)
 (struct pop asm (dest) #:prefab)
+(struct idiv asm (reg) #:prefab)
+(struct imul asm (reg) #:prefab)
 (struct inc asm (reg) #:prefab)
 (struct dec asm (reg) #:prefab)
 (struct _not asm (reg) #:prefab)
+(struct xchg asm (dest src) #:prefab)
 (struct add asm (dest src) #:prefab)
 (struct sub asm (dest src) #:prefab)
 (struct _and asm (dest src) #:prefab)
 (struct _or asm (dest src) #:prefab)
 (struct _xor asm (dest src) #:prefab)
+(struct cltd asm () #:prefab)
 
 (define arg->string
   (match-lambda
@@ -71,6 +83,8 @@
   (match-lambda
    [(block l)
     (for-each write-one l)]
+   [(cltd)
+    (printf "cltd\n")]
    [(push src)
     (printf "push ~a\n"
             (register->string src))]
@@ -82,6 +96,12 @@
             (register->string dest))]
    [(dec dest)
     (printf "dec ~a\n"
+            (register->string dest))]
+   [(imul dest)
+    (printf "imul ~a\n"
+            (register->string dest))]
+   [(idiv dest)
+    (printf "idiv ~a\n"
             (register->string dest))]
    [(_not dest)
     (printf "not ~a\n"
@@ -96,6 +116,10 @@
             (register->string src))]
    [(_xor dest src)
     (printf "xor ~a, ~a\n"
+            (register->string dest)
+            (register->string src))]
+   [(xchg dest src)
+    (printf "xchg ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(add dest src)
