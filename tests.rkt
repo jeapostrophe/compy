@@ -119,3 +119,53 @@
 (test-program
  'day2 '(quotient 4 2)
  #rx#"^$" #rx#"^$" 2)
+
+(test-program
+ 'day3 '(= 2 2)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day3 '(= 2 1)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day3 '(= 2 3)
+ #rx#"^$" #rx#"^$" 0)
+
+(test-program
+ 'day3 '(<= 2 2)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day3 '(<= 2 1)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day3 '(<= 2 3)
+ #rx#"^$" #rx#"^$" 1)
+
+(test-program
+ 'day3 '(< 2 2)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day3 '(< 2 1)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day3 '(< 2 3)
+ #rx#"^$" #rx#"^$" 1)
+
+(test-program
+ 'day3 '(>= 2 2)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day3 '(>= 2 1)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day3 '(>= 2 3)
+ #rx#"^$" #rx#"^$" 0)
+
+(test-program
+ 'day3 '(> 2 2)
+ #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day3 '(> 2 1)
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day3 '(> 2 3)
+ #rx#"^$" #rx#"^$" 0)

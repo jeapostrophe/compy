@@ -5,9 +5,13 @@ The 'langs' directory has the compilers for the various languages.
 The 'asm' language is X86 assembly. I expect it to grow and grow as
 the course goes on.
 
-The 'day0' language just has single byte numbers.
+'day0' just has single byte numbers.
 
-The 'day1' language adds the basic operations of the CPU (arithmetic, logic, etc.)
+'day1' adds the basic operations of the CPU (arithmetic, logic, etc.)
+
+'day2' adds multiplication and division
+
+'day3' adds comparison operators
 
 I haven't done any more yet, but I expect to add...
 

@@ -45,6 +45,7 @@
        (compile language p-pth
                 'asm a-pth))
      "Compiling")
+    (displayln (file->string a-pth))
     (link a-pth b-pth)
     (define-values (actual-stdout actual-stderr actual-exit-code)
       (run b-pth))

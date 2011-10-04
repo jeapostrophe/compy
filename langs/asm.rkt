@@ -4,6 +4,7 @@
 
 (provide
  (contract-out
+  [al register?]
   [eax register?]
   [ebx register?]
   [ecx register?]
@@ -18,12 +19,18 @@
   [mov (-> register? (or/c constant? register?)
            asm?)]
   [cltd (-> asm?)]
+  [cmp binop/c]
   [xchg binop/c]
   [add binop/c]
   [sub binop/c]
   [rename _and and binop/c]
   [rename _or or binop/c]
   [rename _xor xor binop/c]
+  [sete unaop/c]
+  [setle unaop/c]
+  [setge unaop/c]
+  [setl unaop/c]
+  [setg unaop/c]
   [imul unaop/c]
   [idiv unaop/c]
   [inc unaop/c]
@@ -33,6 +40,7 @@
 
 ;; Registers
 (struct register (name) #:prefab)
+(define al (register 'al))
 (define eax (register 'eax))
 (define ebx (register 'ebx))
 (define ecx (register 'ecx))
@@ -58,10 +66,16 @@
 (struct pop asm (dest) #:prefab)
 (struct idiv asm (reg) #:prefab)
 (struct imul asm (reg) #:prefab)
+(struct sete asm (reg) #:prefab)
+(struct setle asm (reg) #:prefab)
+(struct setge asm (reg) #:prefab)
+(struct setl asm (reg) #:prefab)
+(struct setg asm (reg) #:prefab)
 (struct inc asm (reg) #:prefab)
 (struct dec asm (reg) #:prefab)
 (struct _not asm (reg) #:prefab)
 (struct xchg asm (dest src) #:prefab)
+(struct cmp asm (dest src) #:prefab)
 (struct add asm (dest src) #:prefab)
 (struct sub asm (dest src) #:prefab)
 (struct _and asm (dest src) #:prefab)
@@ -97,6 +111,21 @@
    [(dec dest)
     (printf "dec ~a\n"
             (register->string dest))]
+   [(sete dest)
+    (printf "sete ~a\n"
+            (register->string dest))]
+   [(setle dest)
+    (printf "setle ~a\n"
+            (register->string dest))]
+   [(setge dest)
+    (printf "setge ~a\n"
+            (register->string dest))]
+   [(setl dest)
+    (printf "setl ~a\n"
+            (register->string dest))]
+   [(setg dest)
+    (printf "setg ~a\n"
+            (register->string dest))]
    [(imul dest)
     (printf "imul ~a\n"
             (register->string dest))]
@@ -108,6 +137,10 @@
             (register->string dest))]
    [(_and dest src)
     (printf "and ~a, ~a\n"
+            (register->string dest)
+            (register->string src))]
+   [(cmp dest src)
+    (printf "cmp ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(_or dest src)
