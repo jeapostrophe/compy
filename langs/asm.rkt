@@ -115,82 +115,82 @@
    [(block l)
     (for-each write-one l)]
    [(cltd)
-    (printf "cltd\n")]
+    (printf "\tcltd\n")]
    [(label-mark l)
     (printf "~a:\n"
             (label->string l))]
    [(jmp l)
-    (printf "jmp ~a\n"
+    (printf "\tjmp ~a\n"
             (label->string l))]
    [(jne l)
-    (printf "jne ~a\n"
+    (printf "\tjne ~a\n"
             (label->string l))]
    [(push src)
-    (printf "push ~a\n"
+    (printf "\tpush ~a\n"
             (register->string src))]
    [(pop dest)
-    (printf "pop ~a\n"
+    (printf "\tpop ~a\n"
             (register->string dest))]
    [(inc dest)
-    (printf "inc ~a\n"
+    (printf "\tinc ~a\n"
             (register->string dest))]
    [(dec dest)
-    (printf "dec ~a\n"
+    (printf "\tdec ~a\n"
             (register->string dest))]
    [(sete dest)
-    (printf "sete ~a\n"
+    (printf "\tsete ~a\n"
             (register->string dest))]
    [(setle dest)
-    (printf "setle ~a\n"
+    (printf "\tsetle ~a\n"
             (register->string dest))]
    [(setge dest)
-    (printf "setge ~a\n"
+    (printf "\tsetge ~a\n"
             (register->string dest))]
    [(setl dest)
-    (printf "setl ~a\n"
+    (printf "\tsetl ~a\n"
             (register->string dest))]
    [(setg dest)
-    (printf "setg ~a\n"
+    (printf "\tsetg ~a\n"
             (register->string dest))]
    [(imul dest)
-    (printf "imul ~a\n"
+    (printf "\timul ~a\n"
             (register->string dest))]
    [(idiv dest)
-    (printf "idiv ~a\n"
+    (printf "\tidiv ~a\n"
             (register->string dest))]
    [(_not dest)
-    (printf "not ~a\n"
+    (printf "\tnot ~a\n"
             (register->string dest))]
    [(_and dest src)
-    (printf "and ~a, ~a\n"
+    (printf "\tand ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(cmp dest src)
-    (printf "cmp ~a, ~a\n"
+    (printf "\tcmp ~a, ~a\n"
             (register->string dest)
             (arg->string src))]
    [(_or dest src)
-    (printf "or ~a, ~a\n"
+    (printf "\tor ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(_xor dest src)
-    (printf "xor ~a, ~a\n"
+    (printf "\txor ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(xchg dest src)
-    (printf "xchg ~a, ~a\n"
+    (printf "\txchg ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(add dest src)
-    (printf "add ~a, ~a\n"
+    (printf "\tadd ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(sub dest src)
-    (printf "sub ~a, ~a\n"
+    (printf "\tsub ~a, ~a\n"
             (register->string dest)
             (register->string src))]
    [(mov dest src)
-    (printf "mov ~a, ~a\n"
+    (printf "\tmov ~a, ~a\n"
             (register->string dest)
             (arg->string src))]))
 
@@ -199,10 +199,10 @@
   (printf "global start\n")
   (printf "start:\n")
   (write-one a)
-  (printf "push eax\n")
-  (printf "mov eax, 0x1\n")
-  (printf "sub esp, 4\n")
-  (printf "int 0x80\n"))
+  (printf "\tpush eax\n")
+  (printf "\tmov eax, 0x1\n")
+  (printf "\tsub esp, 4\n")
+  (printf "\tint 0x80\n"))
 
 ;; Contracts
 (define binop/c
