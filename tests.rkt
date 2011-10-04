@@ -99,6 +99,15 @@
  #rx#"^$" #rx#"^$" 12)
 
 (test-program
+ 'day2 '(quotient (quotient 4 1) (quotient 2 2))
+ #rx#"^$" #rx#"^$" 4)
+(test-program
+ 'day2 '(* (* 2 2) (* 4 1))
+ #rx#"^$" #rx#"^$" 16)
+(test-program
+ 'day2 '(+ (+ 2 2) (- 4 1))
+ #rx#"^$" #rx#"^$" 7)
+(test-program
  'day2 '(+ 4 3)
  #rx#"^$" #rx#"^$" 7)
 (test-program
@@ -120,6 +129,15 @@
  'day2 '(quotient 4 2)
  #rx#"^$" #rx#"^$" 2)
 
+(test-program
+ 'day3 '(quotient (quotient 4 1) (quotient 2 2))
+ #rx#"^$" #rx#"^$" 4)
+(test-program
+ 'day3 '(+ (+ 2 2) (- 4 1))
+ #rx#"^$" #rx#"^$" 7)
+(test-program
+ 'day3 '(* (* 2 2) (* 4 1))
+ #rx#"^$" #rx#"^$" 16)
 (test-program
  'day3 '(= 2 2)
  #rx#"^$" #rx#"^$" 1)
@@ -169,3 +187,40 @@
 (test-program
  'day3 '(> 2 3)
  #rx#"^$" #rx#"^$" 0)
+(test-program
+ 'day3 '(= (+ 2 2) (- 6 2))
+ #rx#"^$" #rx#"^$" 1)
+
+(test-program
+ 'day4 '(= (+ 2 2) (- 6 2))
+ #rx#"^$" #rx#"^$" 1)
+(test-program
+ 'day4 '(quotient (quotient 4 1) (quotient 2 2))
+ #rx#"^$" #rx#"^$" 4)
+(test-program
+ 'day4 '(if0 0 3 4)
+ #rx#"^$" #rx#"^$" 3)
+(test-program
+ 'day4 '(if0 1 3 4)
+ #rx#"^$" #rx#"^$" 4)
+
+(test-program
+ 'day4 '(if0 (- 1 1) 3 4)
+ #rx#"^$" #rx#"^$" 3)
+(test-program
+ 'day4 '(if0 (+ 0 1) 3 4)
+ #rx#"^$" #rx#"^$" 4)
+
+(test-program
+ 'day4 '(* (* 2 2) (* 4 1))
+ #rx#"^$" #rx#"^$" 16)
+(test-program
+ 'day4 '(+ (+ 2 2) (- 4 1))
+ #rx#"^$" #rx#"^$" 7)
+(test-program
+ 'day4 '(if0 (= (+ 2 2) (- 6 2)) 3 4)
+ #rx#"^$" #rx#"^$" 4)
+(test-program
+ 'day4 '(if0 (< 4 (- 4 1)) 3 4)
+ #rx#"^$" #rx#"^$" 3)
+

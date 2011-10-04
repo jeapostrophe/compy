@@ -4,6 +4,8 @@
 
 (provide
  (contract-out
+  [make-label (-> label?)]
+  [label-mark (-> label? asm?)]
   [al register?]
   [eax register?]
   [ebx register?]
@@ -12,6 +14,8 @@
   [asm? (-> any/c boolean?)]
   [seqn (->* () () #:rest (listof asm?)
                   asm?)]
+  [jmp (-> label? asm?)]
+  [jne (-> label? asm?)]
   [push (-> register?
            asm?)]
   [pop (-> register?
@@ -19,7 +23,8 @@
   [mov (-> register? (or/c constant? register?)
            asm?)]
   [cltd (-> asm?)]
-  [cmp binop/c]
+  [cmp (-> register? (or/c constant? register?)
+           asm?)]
   [xchg binop/c]
   [add binop/c]
   [sub binop/c]
@@ -37,6 +42,15 @@
   [dec unaop/c]
   [rename _not not unaop/c]
   [write (-> asm? void)]))
+
+;; Label
+(struct label (name) #:prefab)
+
+(define (label->string l)
+  (symbol->string (label-name l)))
+
+(define (make-label)
+  (label (gensym)))
 
 ;; Registers
 (struct register (name) #:prefab)
@@ -82,6 +96,9 @@
 (struct _or asm (dest src) #:prefab)
 (struct _xor asm (dest src) #:prefab)
 (struct cltd asm () #:prefab)
+(struct jmp asm (l) #:prefab)
+(struct jne asm (l) #:prefab)
+(struct label-mark asm (l) #:prefab)
 
 (define arg->string
   (match-lambda
@@ -99,6 +116,15 @@
     (for-each write-one l)]
    [(cltd)
     (printf "cltd\n")]
+   [(label-mark l)
+    (printf "~a:\n"
+            (label->string l))]
+   [(jmp l)
+    (printf "jmp ~a\n"
+            (label->string l))]
+   [(jne l)
+    (printf "jne ~a\n"
+            (label->string l))]
    [(push src)
     (printf "push ~a\n"
             (register->string src))]
@@ -142,7 +168,7 @@
    [(cmp dest src)
     (printf "cmp ~a, ~a\n"
             (register->string dest)
-            (register->string src))]
+            (arg->string src))]
    [(_or dest src)
     (printf "or ~a, ~a\n"
             (register->string dest)

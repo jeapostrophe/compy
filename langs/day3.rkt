@@ -76,17 +76,20 @@
     (x86:seqn
      ;; LHS -> eax
      (to-asm lhs)
-     ;; LHS -> edx
-     (x86:mov x86:edx x86:eax)
+     ;; LHS -> stack
+     (x86:push x86:eax)
      ;; RHS -> eax
      (to-asm rhs)
+     ;; LHS -> edx
+     (x86:pop x86:edx)
      ;; (op RHS LHS) -> eax
      (x86:imul x86:edx))]
    [(div remainder? lhs rhs)
     (x86:seqn
      (to-asm lhs)
-     (x86:mov x86:ecx x86:eax)
+     (x86:push x86:eax)
      (to-asm rhs)
+     (x86:pop x86:ecx)
      (x86:xchg x86:ecx x86:eax)
      (x86:mov x86:edx 0)
      (x86:idiv x86:ecx)
@@ -104,11 +107,13 @@
     (x86:seqn
      ;; LHS -> stack
      (to-asm lhs)
-     (x86:mov x86:ebx x86:eax)
-
+     (x86:push x86:eax)
+     
      ;; RHS -> eax
      (to-asm rhs)
 
+     (x86:pop x86:ebx)
+     
      (if assoc?
          (x86:seqn)
          (x86:seqn
@@ -119,8 +124,9 @@
    [(cmpop op lhs rhs)
     (x86:seqn
      (to-asm lhs)
-     (x86:mov x86:edx x86:eax)
+     (x86:push x86:eax)
      (to-asm rhs)
+     (x86:pop x86:edx)
      (x86:cmp x86:edx x86:eax)
      (op x86:al))]
    [(unaop op lhs)

@@ -6,8 +6,10 @@
 (struct e () #:prefab)
 (struct num e (n) #:prefab)
 
+(struct if0 e (tst tru fal) #:prefab)
 (struct mult e (lhs rhs) #:prefab)
 (struct div e (remainder? lhs rhs) #:prefab)
+(struct cmpop e (op lhs rhs) #:prefab)
 (struct binop e (op assoc? lhs rhs) #:prefab)
 (struct unaop e (op lhs) #:prefab)
 
@@ -17,6 +19,12 @@
           'bitwise-and (cons x86:and #t)
           'bitwise-ior (cons x86:or #t)
           'bitwise-xor (cons x86:xor #t)))
+(define cmpops
+  (hasheq '= x86:sete
+          '> x86:setg
+          '>= x86:setge
+          '< x86:setl
+          '<= x86:setle))
 (define unaops
   (hasheq 'add1 x86:inc
           'sub1 x86:dec
@@ -24,6 +32,10 @@
 
 (define parse
   (match-lambda
+   [(list 'if0 tst tru fal)
+    (if0 (parse tst)
+         (parse tru)
+         (parse fal))]
    [(list '* lhs rhs)
     (mult (parse lhs) (parse rhs))]
    [(list 'quotient lhs rhs)
@@ -37,6 +49,15 @@
           lhs
           rhs)
     (binop opcode assoc?
+           (parse lhs)
+           (parse rhs))]
+   [(list (and (? symbol?)
+               (app (lambda (s)
+                      (hash-ref cmpops s #f))
+                    (and (not #f)
+                         opcode)))
+          lhs rhs)
+    (cmpop opcode
            (parse lhs)
            (parse rhs))]
    [(list (and (? symbol?)
@@ -56,6 +77,18 @@
 |#
 (define to-asm
   (match-lambda
+   [(if0 tst tru fal)
+    (define false-label (x86:make-label))
+    (define after-label (x86:make-label))
+    (x86:seqn
+     (to-asm tst)
+     (x86:cmp x86:eax 0)
+     (x86:jne false-label)
+     (to-asm tru)
+     (x86:jmp after-label)
+     (x86:label-mark false-label)
+     (to-asm fal)
+     (x86:label-mark after-label))]
    [(mult lhs rhs)
     (x86:seqn
      ;; LHS -> eax
@@ -97,15 +130,21 @@
      (to-asm rhs)
 
      (x86:pop x86:ebx)
-     
      (if assoc?
          (x86:seqn)
          (x86:seqn
           (x86:xchg x86:ebx x86:eax)))
      
      ;; (op LHS RHS) -> eax
-     (op x86:eax x86:ebx)
-     )]
+     (op x86:eax x86:ebx))]
+   [(cmpop op lhs rhs)
+    (x86:seqn
+     (to-asm lhs)
+     (x86:push x86:eax)
+     (to-asm rhs)
+     (x86:pop x86:edx)
+     (x86:cmp x86:edx x86:eax)
+     (op x86:al))]
    [(unaop op lhs)
     (x86:seqn
      ;; LHS -> eax
