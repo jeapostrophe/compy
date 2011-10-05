@@ -158,7 +158,7 @@
 (define (x86-op->racket-op o)
   (cond
    [(equal? o x86:add) +]
-   [(equal? o x86:sub) +]
+   [(equal? o x86:sub) -]
    [(equal? o x86:or) bitwise-ior]
    [(equal? o x86:xor) bitwise-xor]
    [(equal? o x86:and) bitwise-and]

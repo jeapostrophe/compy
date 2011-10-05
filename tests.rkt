@@ -1,226 +1,76 @@
 #lang racket/base
 (require "testing.rkt")
-    
-(test-program
- 'day0 '0 #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day0 '42 #rx#"^$" #rx#"^$" 42)
-(test-program
- 'day0 '24 #rx#"^$" #rx#"^$" 24)
 
-(test-program
- 'day1 '(+ 1 1)
- #rx#"^$" #rx#"^$" 2)
-(test-program
- 'day1 '(+ (+ 10 61) 1)
- #rx#"^$" #rx#"^$" 72)
-(test-program
- 'day1 '(+ 1 (+ 3 3))
- #rx#"^$" #rx#"^$" 7)
-(test-program
- 'day1 '(+ (+ 1 1) (+ 3 3))
- #rx#"^$" #rx#"^$" 8)
-
-(test-program
- 'day1 '(- 1 1)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day1 '(- 4 2)
- #rx#"^$" #rx#"^$" 2)
-
-(test-program
- 'day1 '(add1 1)
- #rx#"^$" #rx#"^$" 2)
-(test-program
- 'day1 '(sub1 1)
- #rx#"^$" #rx#"^$" 0)
-
-(test-program
- 'day1 '(sub1 (+ 2 2))
- #rx#"^$" #rx#"^$" 3)
-(test-program
- 'day1 '(add1 (+ 2 2))
- #rx#"^$" #rx#"^$" 5)
-
-(test-program
- 'day1 '(bitwise-not #b00000000)
- #rx#"^$" #rx#"^$" #b11111111)
-(test-program
- 'day1 '(bitwise-not #b11111111)
- #rx#"^$" #rx#"^$" #b00000000)
-
-(test-program
- 'day1 '(bitwise-and 0 0)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day1 '(bitwise-and 1 0)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day1 '(bitwise-and 0 1)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day1 '(bitwise-and 1 1)
- #rx#"^$" #rx#"^$" 1)
-
-(test-program
- 'day1 '(bitwise-ior 0 0)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day1 '(bitwise-ior 1 0)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day1 '(bitwise-ior 0 1)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day1 '(bitwise-ior 1 1)
- #rx#"^$" #rx#"^$" 1)
-
-(test-program
- 'day1 '(bitwise-xor 0 0)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day1 '(bitwise-xor 1 0)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day1 '(bitwise-xor 0 1)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day1 '(bitwise-xor 1 1)
- #rx#"^$" #rx#"^$" 0)
-
-(test-program
- 'day2 '(* 1 1)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day2 '(* 1 3)
- #rx#"^$" #rx#"^$" 3)
-(test-program
- 'day2 '(* 4 3)
- #rx#"^$" #rx#"^$" 12)
-
-(test-program
- 'day2 '(quotient (quotient 4 1) (quotient 2 2))
- #rx#"^$" #rx#"^$" 4)
-(test-program
- 'day2 '(* (* 2 2) (* 4 1))
- #rx#"^$" #rx#"^$" 16)
-(test-program
- 'day2 '(+ (+ 2 2) (- 4 1))
- #rx#"^$" #rx#"^$" 7)
-(test-program
- 'day2 '(+ 4 3)
- #rx#"^$" #rx#"^$" 7)
-(test-program
- 'day2 '(- 4 3)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day2 '(quotient 4 3)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day2 '(remainder 4 3)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day2 '(quotient 8 3)
- #rx#"^$" #rx#"^$" 2)
-(test-program
- 'day2 '(remainder 8 10)
- #rx#"^$" #rx#"^$" 8)
-(test-program
- 'day2 '(quotient 4 2)
- #rx#"^$" #rx#"^$" 2)
-
-(test-program
- 'day3 '(quotient (quotient 4 1) (quotient 2 2))
- #rx#"^$" #rx#"^$" 4)
-(test-program
- 'day3 '(+ (+ 2 2) (- 4 1))
- #rx#"^$" #rx#"^$" 7)
-(test-program
- 'day3 '(* (* 2 2) (* 4 1))
- #rx#"^$" #rx#"^$" 16)
-(test-program
- 'day3 '(= 2 2)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day3 '(= 2 1)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day3 '(= 2 3)
- #rx#"^$" #rx#"^$" 0)
-
-(test-program
- 'day3 '(<= 2 2)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day3 '(<= 2 1)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day3 '(<= 2 3)
- #rx#"^$" #rx#"^$" 1)
-
-(test-program
- 'day3 '(< 2 2)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day3 '(< 2 1)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day3 '(< 2 3)
- #rx#"^$" #rx#"^$" 1)
-
-(test-program
- 'day3 '(>= 2 2)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day3 '(>= 2 1)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day3 '(>= 2 3)
- #rx#"^$" #rx#"^$" 0)
-
-(test-program
- 'day3 '(> 2 2)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day3 '(> 2 1)
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day3 '(> 2 3)
- #rx#"^$" #rx#"^$" 0)
-(test-program
- 'day3 '(= (+ 2 2) (- 6 2))
- #rx#"^$" #rx#"^$" 1)
-
-(test-program
- 'day4 '(= (+ 2 2) (- 6 2))
- #rx#"^$" #rx#"^$" 1)
-(test-program
- 'day4 '(quotient (quotient 4 1) (quotient 2 2))
- #rx#"^$" #rx#"^$" 4)
-(test-program
- 'day4 '(if0 0 3 4)
- #rx#"^$" #rx#"^$" 3)
-(test-program
- 'day4 '(if0 1 3 4)
- #rx#"^$" #rx#"^$" 4)
-
-(test-program
- 'day4 '(if0 (- 1 1) 3 4)
- #rx#"^$" #rx#"^$" 3)
-(test-program
- 'day4 '(if0 (+ 0 1) 3 4)
- #rx#"^$" #rx#"^$" 4)
-
-(test-program
- 'day4 '(* (* 2 2) (* 4 1))
- #rx#"^$" #rx#"^$" 16)
-(test-program
- 'day4 '(+ (+ 2 2) (- 4 1))
- #rx#"^$" #rx#"^$" 7)
-(test-program
- 'day4 '(if0 (= (+ 2 2) (- 6 2)) 3 4)
- #rx#"^$" #rx#"^$" 4)
-(test-program
- 'day4 '(if0 (< 4 (- 4 1)) 3 4)
- #rx#"^$" #rx#"^$" 3)
-
+(tests
+ [(day0)
+  0
+  42
+  24] 
+ [(day1)
+  (+ 1 1)
+  (+ (+ 10 61) 1)
+  (+ 1 (+ 3 3))
+  (+ (+ 1 1) (+ 3 3))
+  (- 1 1)
+  (- (- 61 10) 1)
+  (- 1 (- 3 3))
+  (- (- 1 1) (- 3 3))
+  (+ (- 61 10) 1)
+  (- 10 (+ 3 3))
+  (+ (- 1 1) (+ 3 3))
+  (add1 1)
+  (sub1 1)
+  (add1 (+ 2 2))
+  ((sub1 (- 6 2)) => 3)
+  (! (bitwise-not #b00000000) => #"" #"" #b11111111)
+  (! (bitwise-not #b11111111) => #"" #"" #b00000000)
+  (bitwise-and 0 0)
+  (bitwise-and 0 1)
+  (bitwise-and 1 0)
+  (bitwise-and 1 1)
+  (bitwise-ior 0 0)
+  (bitwise-ior 0 1)
+  (bitwise-ior 1 0)
+  (bitwise-ior 1 1)
+  (bitwise-xor 0 0)
+  (bitwise-xor 0 1)
+  (bitwise-xor 1 0)
+  (bitwise-xor 1 1)]
+ [(day2)
+  (* 1 1)
+  (* 1 3)
+  (* 4 3)
+  (* (* 2 2) (* 4 1))
+  (quotient 4 3)
+  (remainder 4 3)
+  (quotient 8 3)
+  (remainder 8 10)
+  (quotient 4 2)
+  (quotient (quotient 4 1) (quotient 2 2))]
+ [(day3)
+  (= 2 2)
+  (= 2 1)
+  (= 2 3)
+  (< 2 2)
+  (< 2 1)
+  (< 2 3)
+  (<= 2 2)
+  (<= 2 1)
+  (<= 2 3)
+  (> 2 2)
+  (> 2 1)
+  (> 2 3)
+  (>= 2 2)
+  (>= 2 1)
+  (>= 2 3)
+  (= (+ 2 2) (- 6 2))
+  (= (* 2 2) (quotient 6 2))
+  ((= (+ 2 2) (- 6 2)) => 1)
+  ((< 4 (- 4 1)) => 0)]
+ [(day4)
+  (if0 0 3 4)
+  (if0 1 3 4)
+  ((if0 (- 1 1) 3 4) => 3)
+  (if0 (+ 0 1) 3 4)
+  ((if0 (= (+ 2 2) (- 6 2)) 3 4) => 4)
+  ((if0 (< 4 (- 4 1)) 3 4) => 3)])
