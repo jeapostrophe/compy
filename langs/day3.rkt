@@ -139,9 +139,57 @@
     (x86:seqn
      (x86:mov x86:eax b))]))
 
+(define (x86-op->racket-op o)
+  (cond
+   [(equal? o x86:add) +]
+   [(equal? o x86:sub) +]
+   [(equal? o x86:or) bitwise-ior]
+   [(equal? o x86:xor) bitwise-xor]
+   [(equal? o x86:and) bitwise-and]
+   [(equal? o x86:inc) add1]
+   [(equal? o x86:dec) sub1]
+   [(equal? o x86:not) bitwise-not]
+   [(equal? o x86:sete) =]
+   [(equal? o x86:setg) >]
+   [(equal? o x86:setge) >=]
+   [(equal? o x86:setl) <]
+   [(equal? o x86:setle) <=]))
+
+(define bool->num
+  (match-lambda
+   [#t 1]
+   [#f 0]))
+
+(define interp
+  (match-lambda
+   [(cmpop op lhs rhs)
+    (bool->num
+     ((x86-op->racket-op op)
+      (interp lhs)
+      (interp rhs)))]
+   [(div #f lhs rhs)
+    (quotient (interp lhs)
+              (interp rhs))]
+   [(div #t lhs rhs)
+    (remainder (interp lhs)
+               (interp rhs))]
+   [(mult lhs rhs)
+    (* (interp lhs)
+       (interp rhs))]
+   [(binop op _ lhs rhs)
+    ((x86-op->racket-op op)
+     (interp lhs)
+     (interp rhs))]
+   [(unaop op lhs)
+    ((x86-op->racket-op op)
+     (interp lhs))]
+   [(num b)
+    b]))
+
 (provide
  (contract-out
   [struct e ()]
   [struct (num e) ([n byte?])]
   [parse (-> any/c e?)]
-  [to-asm (-> e? x86:asm?)]))
+  [to-asm (-> e? x86:asm?)]
+  [interp (-> e? any/c)]))

@@ -30,7 +30,13 @@
 (define-runtime-path langs "langs")
 (define (compile in-lang in-pth
                  out-lang out-pth)
-  (define in (file->value in-pth))
+  (define in-read
+    (dynamic-require (build-path langs (format "~a.rkt" in-lang))
+                     'read
+                     (lambda () read)))
+  (define in
+    (with-input-from-file in-pth
+      in-read))
   (define in-parse
     (dynamic-require (build-path langs (format "~a.rkt" in-lang))
                      'parse))

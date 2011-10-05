@@ -17,9 +17,16 @@
     (x86:seqn
      (x86:mov x86:eax b))]))
 
+(define interp
+  (match-lambda
+   [(num b)
+    b]))
+
+
 (provide
  (contract-out
   [struct e ()]
   [struct (num e) ([n byte?])]
   [parse (-> any/c e?)]
-  [to-asm (-> e? x86:asm?)]))
+  [to-asm (-> e? x86:asm?)]
+  [interp (-> e? any/c)]))
