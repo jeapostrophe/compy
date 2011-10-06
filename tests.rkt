@@ -73,4 +73,73 @@
   ((if0 (- 1 1) 3 4) => 3)
   (if0 (+ 0 1) 3 4)
   ((if0 (= (+ 2 2) (- 6 2)) 3 4) => 4)
-  ((if0 (< 4 (- 4 1)) 3 4) => 3)])
+  ((if0 (< 4 (- 4 1)) 3 4) => 3)]
+ [(day5)
+  ((define (f a b)
+     (+ a b))
+   (app f 1 2))
+
+  ((define (f a)
+     a)
+   (app f 1))
+  
+  (* 5 4)
+
+  (* (+ 1 4) 4)
+
+  ((define (g x y)
+     (* x y))
+   (app g 5 4))
+
+  ((define (g x y)
+     (* x y))
+   (app g (+ 1 4) 4))
+
+  ((define (f a b)
+     (+ 1 a))
+   (app f 4 4))
+
+  ((define (f a b)
+     b)
+   (app f 4 4))
+
+  ((define (f a b)
+     (app g (+ 1 a) b))
+   (define (g x y)
+     (* x y))
+   (app f 4 4))
+
+  ((define (f a b)
+     (app g (+ 1 a) b))
+   (define (g x y)
+     x)
+   (app f 4 4))
+
+  ((define (f a b)
+     (app g (+ 1 a) b))
+   (define (g x y)
+     y)
+   (app f 4 4))
+
+  ((define (f a b)
+     a)
+   (app f 0 1))
+
+  ((define (f a b)
+     b)
+   (app f 0 1))
+
+  ((define (f a b)
+     (app g a b))
+   (define (g a b)
+     a)
+   (app f 0 1))
+
+  ((define (f a b)
+     (app g a b))
+   (define (g a b)
+     b)
+   (app f 0 1))
+  
+  ]
+ )

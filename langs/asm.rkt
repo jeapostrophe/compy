@@ -4,13 +4,19 @@
 
 (provide
  (contract-out
-  [make-label (-> label?)]
+  [comment (-> string? asm?)]
+  [make-label (->* () (symbol?) label?)]
   [label-mark (-> label? asm?)]
   [al register?]
   [eax register?]
   [ebx register?]
   [ecx register?]
   [edx register?]
+  [esi register?]
+  [edi register?]
+  [ebp register?]
+  [esp register?]
+  [esp+ (-> number? register?)]
   [asm? (-> any/c boolean?)]
   [seqn (->* () () #:rest (listof asm?)
                   asm?)]
@@ -26,7 +32,8 @@
   [cmp (-> register? (or/c constant? register?)
            asm?)]
   [xchg binop/c]
-  [add binop/c]
+  [add (-> register? (or/c constant? register?)
+           asm?)]
   [sub binop/c]
   [rename _and and binop/c]
   [rename _or or binop/c]
@@ -49,20 +56,30 @@
 (define (label->string l)
   (symbol->string (label-name l)))
 
-(define (make-label)
-  (label (gensym)))
+(define (make-label [id 'opt])
+  (label (gensym id)))
 
 ;; Registers
-(struct register (name) #:prefab)
-(define al (register 'al))
-(define eax (register 'eax))
-(define ebx (register 'ebx))
-(define ecx (register 'ecx))
-(define edx (register 'edx))
+(struct register () #:prefab)
+
+(struct named-register register (name) #:prefab)
+(define al (named-register 'al))
+(define eax (named-register 'eax))
+(define ebx (named-register 'ebx))
+(define ecx (named-register 'ecx))
+(define edx (named-register 'edx))
+(define esi (named-register 'esi))
+(define edi (named-register 'edi))
+(define esp (named-register 'esp))
+(define ebp (named-register 'ebp))
+
+(struct esp+ register (offset) #:prefab)
 
 (define register->string
   (match-lambda
-   [(register name)
+   [(esp+ offset)
+    (format "[esp+~a]" offset)]
+   [(named-register name)
     (symbol->string name)]))
 
 ;; Constants
@@ -74,6 +91,7 @@
 
 ;; Assembly
 (struct asm () #:prefab)
+(struct comment asm (s) #:prefab)
 (struct block asm (l) #:prefab)
 (struct mov asm (dest src) #:prefab)
 (struct push asm (src) #:prefab)
@@ -114,6 +132,8 @@
   (match-lambda
    [(block l)
     (for-each write-one l)]
+   [(comment s)
+    (printf "\t;; ~a\n" s)]
    [(cltd)
     (printf "\tcltd\n")]
    [(label-mark l)
@@ -184,7 +204,7 @@
    [(add dest src)
     (printf "\tadd ~a, ~a\n"
             (register->string dest)
-            (register->string src))]
+            (arg->string src))]
    [(sub dest src)
     (printf "\tsub ~a, ~a\n"
             (register->string dest)

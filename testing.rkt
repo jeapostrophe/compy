@@ -52,13 +52,14 @@
        (compile language p-pth
                 'asm a-pth))
      "Compiling")
-    ;;(displayln (file->string a-pth))
     (link a-pth b-pth)
     (define-values (actual-stdout actual-stderr actual-exit-code)
       (run b-pth))
+    (unless (equal? actual-exit-code expected-exit-code)
+      (displayln (file->string a-pth)))
     (check-equal? actual-exit-code expected-exit-code "Exit Code")
     (check-equal? actual-stdout expected-stdout "Standard Output")
-    (check-equal? actual-stderr expected-stderr "Standard Error")
+    (check-equal? actual-stderr expected-stderr "Standard Error")    
     (void)
     (begin (delete-file p-pth)
            (delete-file a-pth)
@@ -88,27 +89,33 @@
           exit-code))
 
 (define (tests* t)
+  (define just
+    (match (current-command-line-arguments)
+      [(vector) #f]
+      [(vector day-s)
+       (string->symbol day-s)]))
   (for/fold
       ([earlier-tests empty])
       ([l*ps (in-list t)])
-    (match-define (list lang ps ...) l*ps)
+    (match-define (list lang  ps ...) l*ps)
     (define all-tests (append earlier-tests ps))
-    (test-case
-     (format "~a" lang)
-     (for ([t* (in-list all-tests)])
-          (test-case
-           (format "~a" t*)
-           (match t*
-             ;; Skips the interpreter, because it is busted on this example
-             [(list '! t '=> stdout stderr exit-code)
-              (test-program lang t stdout stderr exit-code)]
-             [(list t '=> ans)
-              (define-values (stdout stderr exit-code) (interp-for lang t))
-              (check-equal? exit-code ans (format "Interpreter for ~a on ~e" lang t))
-              (test-program lang t stdout stderr exit-code)]
-             [t
-              (define-values (stdout stderr exit-code) (interp-for lang t))
-              (test-program lang t stdout stderr exit-code)]))))
+    (when (or (not just) (equal? just lang))
+      (test-case
+       (format "~a" lang)
+       (for ([t* (in-list all-tests)])
+            (test-case
+             (format "~a" t*)
+             (match t*
+               ;; Skips the interpreter, because it is busted on this example
+               [(list '! t '=> stdout stderr exit-code)
+                (test-program lang t stdout stderr exit-code)]
+               [(list t '=> ans)
+                (define-values (stdout stderr exit-code) (interp-for lang t))
+                (check-equal? exit-code ans (format "Interpreter for ~a on ~e" lang t))
+                (test-program lang t stdout stderr exit-code)]
+               [t
+                (define-values (stdout stderr exit-code) (interp-for lang t))
+                (test-program lang t stdout stderr exit-code)])))))
     all-tests)
   (void))
        
