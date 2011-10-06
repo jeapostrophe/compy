@@ -7,13 +7,13 @@
 
 #|
  p = (d ... fe)
-   | e
+   | fe
  d = (define (<id> <id> ...4) fe)
  fe = e
     | (app <id> e ...4)
+    | (if0 e fe fe)
  e = <id>
    | <num>
-   | (if0 e e e)
    | (* e e)
    | (quotient e e)
    | (remainder e e)
@@ -30,11 +30,11 @@
 
 (struct fe () #:prefab)
 (struct call fe (fun args) #:prefab)
+(struct if0 fe (tst tru fal) #:prefab)
 
 (struct ee fe () #:prefab)
 (struct id ee (s) #:prefab)
 (struct num ee (n) #:prefab)
-(struct if0 ee (tst tru fal) #:prefab)
 (struct mult ee (lhs rhs) #:prefab)
 (struct div ee (remainder? lhs rhs) #:prefab)
 (struct cmpop ee (op lhs rhs) #:prefab)
@@ -60,7 +60,7 @@
 
 (define (parse p)
   (cond
-   [(parse-e p) =>
+   [(parse-fe p) =>
     (lambda (e)
       (program empty e))]
    [else
@@ -85,6 +85,10 @@
     (if ((length arg) . <= . 4)
         (call f (map parse-e arg))
         (error 'parse-fe "Too many arguments"))]
+   [(list 'if0 tst tru fal)
+    (if0 (parse-e tst)
+         (parse-fe tru)
+         (parse-fe fal))]
    [e-se
     (parse-e e-se)]
    [_
@@ -94,10 +98,6 @@
   (match-lambda
    [(? symbol? s)
     (id s)]
-   [(list 'if0 tst tru fal)
-    (if0 (parse-e tst)
-         (parse-e tru)
-         (parse-e fal))]
    [(list '* lhs rhs)
     (mult (parse-e lhs) (parse-e rhs))]
    [(list 'quotient lhs rhs)
@@ -234,6 +234,15 @@
        (x86:jmp
         (hash-ref fun->label fun
                   (lambda () (error 'to-asm "Unknown function: ~e" fun)))))]
+     [(if0 tst tru fal)
+      (define false-label (x86:make-label 'if0false))
+      (x86:seqn
+       (to-asm-e arg-ids tst)
+       (x86:cmp x86:eax 0)
+       (x86:jne false-label)
+       (to-asm-fe fun->label end-lab arg-ids tru)
+       (x86:label-mark false-label)
+       (to-asm-fe fun->label end-lab arg-ids fal))]
      [e
       (x86:seqn
        (to-asm-e arg-ids e)
@@ -254,18 +263,6 @@
           (error 'to-asm-e "Unbound identifier ~e" s)))
       (x86:seqn
        (x86:mov x86:eax (x86:esp+ (* 4 arg-n))))]
-     [(if0 tst tru fal)
-      (define false-label (x86:make-label 'if0false))
-      (define after-label (x86:make-label 'if0after))
-      (x86:seqn
-       (to-asm-e args tst)
-       (x86:cmp x86:eax 0)
-       (x86:jne false-label)
-       (to-asm-e args tru)
-       (x86:jmp after-label)
-       (x86:label-mark false-label)
-       (to-asm-e args fal)
-       (x86:label-mark after-label))]
      [(mult lhs rhs)
       (x86:seqn
        ;; LHS -> eax
@@ -373,6 +370,10 @@
    [(call fun es)
     (apply (hash-ref fun->lam fun)
            (map (curry interp-e arg->val) es))]
+   [(if0 tst tru fal)
+     (if (zero? (interp-e arg->val tst))
+         (interp-fe fun->lam arg->val tru)
+         (interp-fe fun->lam arg->val fal))]
    [e
     (interp-e arg->val e)]))
 
@@ -380,10 +381,6 @@
   (match e
     [(id s)
      (hash-ref arg->val s)]
-    [(if0 tst tru fal)
-     (if (zero? (interp-e arg->val tst))
-         (interp-e arg->val tru)
-         (interp-e arg->val fal))]
     [(cmpop op lhs rhs)
      (bool->num
       ((x86-op->racket-op op)

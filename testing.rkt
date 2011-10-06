@@ -35,6 +35,13 @@
           (get-output-bytes stderr)
           (subprocess-status sp)))
 
+(define (display-with-linenos p)
+  (with-input-from-file p
+    (lambda ()
+      (for ([i (in-naturals 1)]
+            [l (in-lines)])
+           (printf "~a\t~a\n" i l)))))
+
 (define (test-program language program
                       expected-stdout expected-stderr expected-exit-code)
   (define p-pth (make-temporary-file "~a.src"))
@@ -47,16 +54,25 @@
         p-pth #:exists 'replace
       (lambda ()
         (write program)))
-    (check-not-exn
-     (lambda ()
-       (compile language p-pth
-                'asm a-pth))
-     "Compiling")
-    (link a-pth b-pth)
+     (check-not-exn
+      (lambda ()
+        (compile language p-pth
+                 'asm a-pth))
+      "Compiling")
+     
+    (define done? #f)
+    (after
+     (check-not-exn
+      (lambda ()
+        (link a-pth b-pth)        
+        (set! done? #t)))
+     (unless done?
+       (display-with-linenos a-pth)))
+     
     (define-values (actual-stdout actual-stderr actual-exit-code)
       (run b-pth))
     (unless (equal? actual-exit-code expected-exit-code)
-      (displayln (file->string a-pth)))
+      (display-with-linenos a-pth))
     (check-equal? actual-exit-code expected-exit-code "Exit Code")
     (check-equal? actual-stdout expected-stdout "Standard Output")
     (check-equal? actual-stderr expected-stderr "Standard Error")    

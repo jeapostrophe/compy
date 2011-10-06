@@ -140,6 +140,14 @@
    (define (g a b)
      b)
    (app f 0 1))
+
+  ((define (fac n)
+     (app fac-help n 1))
+   (define (fac-help n a)
+     (if0 n
+          a
+          (app fac-help (- n 1) (* n a))))
+   (app fac 5))
   
   ]
  )

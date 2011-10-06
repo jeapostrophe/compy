@@ -56,8 +56,11 @@
 (define (label->string l)
   (symbol->string (label-name l)))
 
+(define (sterilize s)
+  (regexp-replace* #rx"[^a-zA-Z]" (symbol->string s) "_"))
+
 (define (make-label [id 'opt])
-  (label (gensym id)))
+  (label (gensym (sterilize id))))
 
 ;; Registers
 (struct register () #:prefab)

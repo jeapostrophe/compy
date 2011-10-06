@@ -20,11 +20,15 @@
 (define (link a-pth b-pth)
   (define o-pth (make-temporary-file "~a.o"))
   (system* nasm-pth "-f" "macho" a-pth "-o" o-pth)
+  (unless (file-exists? o-pth)
+    (error 'link "Failed to produce object file for ~e" a-pth))
   (case (system-type)
     [(macosx)
      (system* ld-pth "-macosx_version_min" "10.7" "-lSystem" "-o" b-pth o-pth)]
     [(unix)
      (system* ld-pth "-o" b-pth o-pth)])
+  (unless (file-exists? b-pth)
+    (error 'link "Failed to product binary file for ~e" a-pth))
   (delete-file o-pth))
 
 (define-runtime-path langs "langs")
