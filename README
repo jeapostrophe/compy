@@ -1,3 +1,5 @@
+[dormant] an experiment in making a compiler for teaching
+
 This is a little nano-pass compiler to experiment with teaching a compiler course in that style.
 
 The 'langs' directory has the compilers for the various languages.
