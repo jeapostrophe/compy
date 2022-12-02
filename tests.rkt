@@ -147,7 +147,31 @@
      (if0 n
           a
           (app fac-help (- n 1) (* n a))))
-   (app fac 5))
-  
-  ]
- )
+   (app fac 5))]
+
+ ;; adds first-class labels
+ [(day6)
+  ((define (choice f)
+     (app f 1))
+   (define (a x)
+     (+ x 1))
+   (define (b x)
+     (+ x 2))
+   (if0 (- 2 2)
+        (app choice a)
+        (app choice b)))]
+
+ ;; adds vectors
+ [(day7)
+  ((define (set v)
+     (seqn (vector-set! v 0 0)
+           (vector-set! v 1 1)
+           (vector-set! v 2 2)
+           (app clean-up
+                v
+                (+ (vector-ref v 1)
+                   (vector-ref v 2)))))
+   (define (clean-up v ans)
+     (seqn (free-vector! v)
+           ans))
+   (app set (make-vector 3)))])

@@ -5,6 +5,9 @@
          racket/match
          (prefix-in x86: "asm.rkt"))
 
+;; XXX Make the number of arguments specified in a generic way
+;; XXX Compile to x86-64 for more registers?
+
 #|
  p = (d ... fe)
    | fe

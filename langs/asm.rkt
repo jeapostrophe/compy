@@ -2,6 +2,8 @@
 (require racket/contract
          racket/match)
 
+;; XXX Make this code cleaner
+
 (provide
  (contract-out
   [comment (-> string? asm?)]
